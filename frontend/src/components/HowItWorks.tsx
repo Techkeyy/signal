@@ -29,13 +29,13 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-20 border-t border-[#1a1a1a]">
+    <section id="how-it-works" className="py-20 border-t border-[#1E2D4A]">
       <div className="max-w-5xl mx-auto px-5">
         <div className="overline mb-3">How It Works</div>
-        <h2 className="text-2xl font-bold tracking-tight mb-3">
+        <h2 className="text-2xl font-bold tracking-tight text-white mb-3">
           The full pipeline
         </h2>
-        <p className="text-[14px] text-zinc-500 max-w-lg mb-12">
+        <p className="text-[14px] text-[#8A9BB5] max-w-lg mb-12">
           From Reddit post to hackathon-ready idea card — every step is
           transparent and repeatable.
         </p>
@@ -44,21 +44,20 @@ export default function HowItWorks() {
           {STEPS.map((step) => (
             <div
               key={step.num}
-              className="relative bg-[#0d0d0d] border border-[#1a1a1a] rounded-xl p-5 hover:border-[#222] transition-all group"
+              className="relative bg-[#0D1428] border border-[#1E2D4A] rounded-xl p-5 hover:border-[#253556] transition-all group"
             >
-              {/* Number */}
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-[32px] font-bold text-zinc-800 group-hover:text-zinc-700 transition-colors tabular-nums leading-none">
+                <span className="text-[32px] font-bold text-[#1E2D4A] group-hover:text-[#253556] transition-colors tabular-nums leading-none">
                   {step.num}
                 </span>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600 bg-[#111] px-2 py-0.5 rounded">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#4A5670] bg-[#111A33] px-2 py-0.5 rounded">
                   {step.label}
                 </span>
               </div>
-              <h3 className="text-[14px] font-semibold text-zinc-200 mb-1.5">
+              <h3 className="text-[14px] font-semibold text-white mb-1.5">
                 {step.title}
               </h3>
-              <p className="text-[12px] text-zinc-500 leading-relaxed">
+              <p className="text-[12px] text-[#8A9BB5] leading-relaxed">
                 {step.desc}
               </p>
             </div>

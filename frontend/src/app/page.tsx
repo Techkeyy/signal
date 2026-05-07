@@ -29,7 +29,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060606]">
+    <div className="min-h-screen bg-[#0A0F1E]">
       <Navbar />
 
       <Hero stats={stats} onExplore={scrollToExplorer} />
@@ -39,15 +39,16 @@ export default function Home() {
       <Explorer stats={stats} onStatsRefresh={loadStats} />
 
       {/* Footer */}
-      <footer className="py-10 border-t border-[#1a1a1a]">
+      <footer className="py-10 border-t border-[#1E2D4A]">
         <div className="max-w-5xl mx-auto px-5">
           <div className="flex items-center justify-between">
             <div>
               <p className="overline mb-1">Signal</p>
-              <p className="text-[12px] text-zinc-600">
+              <p className="text-[12px] text-[#4A5670]">
                 Web3 hackathon ideas from real complaints ·{" "}
-                <span className="text-zinc-700">
-                  r/ethereum r/ethdev r/defi r/CryptoCurrency r/web3 r/solana r/ethtrader r/solidity
+                <span className="text-[#4A5670]">
+                  r/ethereum r/ethdev r/defi r/CryptoCurrency r/web3 r/solana
+                  r/ethtrader r/solidity
                 </span>
               </p>
             </div>
@@ -55,7 +56,7 @@ export default function Home() {
               href="https://github.com/Techkeyy/signal"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[12px] text-zinc-600 hover:text-zinc-300 transition-colors"
+              className="text-[12px] text-[#8A9BB5] hover:text-white transition-colors"
             >
               GitHub ↗
             </a>

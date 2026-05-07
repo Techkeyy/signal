@@ -30,12 +30,9 @@ export default function Explorer({ stats, onStatsRefresh }: ExplorerProps) {
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const [secondsAgo, setSecondsAgo] = useState(0);
 
-  // Live timer
   useEffect(() => {
     const interval = setInterval(() => {
-      setSecondsAgo(
-        Math.floor((Date.now() - lastRefresh.getTime()) / 1000)
-      );
+      setSecondsAgo(Math.floor((Date.now() - lastRefresh.getTime()) / 1000));
     }, 1000);
     return () => clearInterval(interval);
   }, [lastRefresh]);
@@ -70,37 +67,33 @@ export default function Explorer({ stats, onStatsRefresh }: ExplorerProps) {
     }
   };
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
-
   const total = stats?.total_ideas ?? ideas.length;
   const strong = stats?.tiers?.strong ?? 0;
   const medium = stats?.tiers?.medium ?? 0;
   const avgScore = stats?.avg_signal_score ?? 0;
 
   return (
-    <section id="explorer" className="py-20 border-t border-[#1a1a1a]">
+    <section id="explorer" className="py-20 border-t border-[#1E2D4A]">
       <div className="max-w-5xl mx-auto px-5">
         <div className="overline mb-3">Live Explorer</div>
-        <h2 className="text-2xl font-bold tracking-tight mb-3">
+        <h2 className="text-2xl font-bold tracking-tight text-white mb-3">
           Complaint pipeline in real time
         </h2>
-        <p className="text-[14px] text-zinc-500 max-w-lg mb-6">
+        <p className="text-[14px] text-[#8A9BB5] max-w-lg mb-6">
           Every idea links to a real Reddit post. Data refreshes every 6 hours
           automatically.
         </p>
 
         {/* Status bar */}
-        <div className="flex items-center gap-3 mb-6 text-[12px] text-zinc-500">
+        <div className="flex items-center gap-3 mb-6 text-[12px] text-[#4A5670]">
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />
             Last synced {secondsAgo}s ago
           </span>
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="text-zinc-400 hover:text-zinc-200 transition-colors disabled:opacity-40"
+            className="text-[#8A9BB5] hover:text-white transition-colors disabled:opacity-40"
           >
             {refreshing ? "Refreshing..." : "Refresh"}
           </button>
@@ -108,40 +101,43 @@ export default function Explorer({ stats, onStatsRefresh }: ExplorerProps) {
 
         {/* Stats row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-          <div className="bg-[#0d0d0d] border border-[#1a1a1a] rounded-lg px-4 py-3">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-600 mb-0.5">
-              Ideas
+          {[
+            {
+              label: "Ideas",
+              value: total,
+              sub: `${strong} strong · ${medium} medium`,
+            },
+            {
+              label: "Avg Score",
+              value: avgScore,
+              sub: "out of 100",
+              color: "text-[#F5A623]",
+            },
+            { label: "Subreddits", value: 8, sub: "scanned" },
+            {
+              label: "Refresh",
+              value: "6h",
+              sub: "interval",
+              color: "text-[#00D4AA]",
+            },
+          ].map((stat, i) => (
+            <div
+              key={i}
+              className="bg-[#0D1428] border border-[#1E2D4A] rounded-lg px-4 py-3"
+            >
+              <div className="text-[10px] uppercase tracking-wider text-[#4A5670] mb-0.5">
+                {stat.label}
+              </div>
+              <div
+                className={`text-xl font-bold tabular-nums ${stat.color || "text-white"}`}
+              >
+                {stat.value}
+              </div>
+              <div className="text-[10px] text-[#4A5670] mt-0.5">
+                {stat.sub}
+              </div>
             </div>
-            <div className="text-xl font-bold tabular-nums">{total}</div>
-            <div className="text-[10px] text-zinc-600 mt-0.5">
-              {strong} strong · {medium} medium
-            </div>
-          </div>
-          <div className="bg-[#0d0d0d] border border-[#1a1a1a] rounded-lg px-4 py-3">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-600 mb-0.5">
-              Avg Score
-            </div>
-            <div className="text-xl font-bold text-amber-400 tabular-nums">
-              {avgScore}
-            </div>
-            <div className="text-[10px] text-zinc-600 mt-0.5">out of 100</div>
-          </div>
-          <div className="bg-[#0d0d0d] border border-[#1a1a1a] rounded-lg px-4 py-3">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-600 mb-0.5">
-              Subreddits
-            </div>
-            <div className="text-xl font-bold tabular-nums">8</div>
-            <div className="text-[10px] text-zinc-600 mt-0.5">scanned</div>
-          </div>
-          <div className="bg-[#0d0d0d] border border-[#1a1a1a] rounded-lg px-4 py-3">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-600 mb-0.5">
-              Refresh
-            </div>
-            <div className="text-xl font-bold tabular-nums text-emerald-400">
-              6h
-            </div>
-            <div className="text-[10px] text-zinc-600 mt-0.5">interval</div>
-          </div>
+          ))}
         </div>
 
         {/* Tab switcher */}
@@ -149,11 +145,11 @@ export default function Explorer({ stats, onStatsRefresh }: ExplorerProps) {
           {CATEGORY_TABS.map((tab) => (
             <button
               key={tab}
-              onClick={() => handleTabChange(tab)}
+              onClick={() => setActiveTab(tab)}
               className={`text-[12px] px-3 py-1.5 rounded-md font-medium whitespace-nowrap transition-all ${
                 activeTab === tab
-                  ? "bg-white text-black"
-                  : "text-zinc-500 hover:text-zinc-300 hover:bg-[#111]"
+                  ? "bg-[#00D4AA] text-[#0A0F1E]"
+                  : "text-[#8A9BB5] hover:text-white hover:bg-[#111A33]"
               }`}
             >
               {tab}
@@ -170,16 +166,16 @@ export default function Explorer({ stats, onStatsRefresh }: ExplorerProps) {
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="bg-[#0d0d0d] border border-[#1a1a1a] rounded-xl p-5 animate-pulse h-40"
+                className="bg-[#0D1428] border border-[#1E2D4A] rounded-xl p-5 animate-pulse h-40"
               />
             ))}
           </div>
         ) : ideas.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-zinc-500 text-[14px]">
+            <p className="text-[#8A9BB5] text-[14px]">
               No ideas in this category yet.
             </p>
-            <p className="text-zinc-700 text-[12px] mt-1">
+            <p className="text-[#4A5670] text-[12px] mt-1">
               Try a different tab or hit refresh.
             </p>
           </div>

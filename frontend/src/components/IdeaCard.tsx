@@ -3,14 +3,14 @@
 import { SignalIdea } from "@/lib/types";
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "DeFi / Finance": "border-l-emerald-400",
-  "Cross-Chain / Interoperability": "border-l-violet-400",
-  "Identity / Reputation": "border-l-sky-400",
-  "DAO / Governance": "border-l-amber-400",
-  "Wallet / UX": "border-l-rose-400",
-  "MEV / Fairness": "border-l-red-400",
-  "Data / Storage": "border-l-cyan-400",
-  "Payments / Remittances": "border-l-lime-400",
+  "DeFi / Finance": "border-l-[#00D4AA]",
+  "Cross-Chain / Interoperability": "border-l-[#A855F7]",
+  "Identity / Reputation": "border-l-[#1D6FEB]",
+  "DAO / Governance": "border-l-[#F5A623]",
+  "Wallet / UX": "border-l-[#F43F5E]",
+  "MEV / Fairness": "border-l-[#EF4444]",
+  "Data / Storage": "border-l-[#06B6D4]",
+  "Payments / Remittances": "border-l-[#22C55E]",
 };
 
 function timeAgo(dateStr: string): string {
@@ -30,14 +30,14 @@ function timeAgo(dateStr: string): string {
 
 export default function IdeaCard({ idea }: { idea: SignalIdea }) {
   const borderColor =
-    CATEGORY_COLORS[idea.primary_category] || "border-l-zinc-600";
+    CATEGORY_COLORS[idea.primary_category] || "border-l-[#4A5670]";
 
   const scoreColor =
     idea.signal_score >= 50
-      ? "text-emerald-400"
+      ? "text-[#00D4AA]"
       : idea.signal_score >= 35
-        ? "text-amber-400"
-        : "text-zinc-500";
+        ? "text-[#F5A623]"
+        : "text-[#4A5670]";
 
   const tierChecked =
     idea.signal_tier === "strong"
@@ -48,16 +48,16 @@ export default function IdeaCard({ idea }: { idea: SignalIdea }) {
 
   return (
     <div
-      className={`bg-[#0d0d0d] border border-[#1a1a1a] border-l-2 ${borderColor} rounded-xl p-4 hover:bg-[#111] hover:border-[#222] transition-all group`}
+      className={`bg-[#0D1428] border border-[#1E2D4A] border-l-2 ${borderColor} rounded-xl p-4 hover:bg-[#111A33] hover:border-[#253556] transition-all group`}
     >
-      {/* Header: source + score */}
+      {/* Header */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2 min-w-0">
-          <span className="text-[11px] font-medium text-zinc-500 truncate">
+          <span className="text-[11px] font-medium text-[#8A9BB5] truncate">
             {idea.source_subreddit}
           </span>
-          <span className="text-[10px] text-zinc-600">·</span>
-          <span className="text-[10px] text-zinc-600">{tierChecked}</span>
+          <span className="text-[10px] text-[#4A5670]">·</span>
+          <span className="text-[10px] text-[#4A5670]">{tierChecked}</span>
         </div>
         <span className={`text-[13px] font-bold tabular-nums ${scoreColor}`}>
           {idea.signal_score}%
@@ -65,36 +65,36 @@ export default function IdeaCard({ idea }: { idea: SignalIdea }) {
       </div>
 
       {/* Title */}
-      <h3 className="text-[14px] font-semibold text-zinc-100 leading-snug mb-1.5">
+      <h3 className="text-[14px] font-semibold text-white leading-snug mb-1.5">
         {idea.problem_title}
       </h3>
 
-      {/* Quote — one line */}
-      <p className="text-[12px] text-zinc-500 italic leading-relaxed mb-3 line-clamp-2">
+      {/* Quote */}
+      <p className="text-[12px] text-[#8A9BB5] italic leading-relaxed mb-3 line-clamp-2">
         {idea.source_quote}
       </p>
 
       {/* Pitch */}
-      <div className="bg-[#111] border border-[#1a1a1a] rounded-lg px-3 py-2 mb-3">
-        <p className="text-[12px] text-zinc-300 leading-relaxed">
+      <div className="bg-[#111A33] border border-[#1E2D4A] rounded-lg px-3 py-2 mb-3">
+        <p className="text-[12px] text-[#8A9BB5] leading-relaxed">
           {idea.pitch}
         </p>
       </div>
 
-      {/* Footer row */}
+      {/* Footer */}
       <div className="flex items-center justify-between">
-        <span className="text-[10px] text-zinc-600 truncate max-w-[55%]">
+        <span className="text-[10px] text-[#4A5670] truncate max-w-[55%]">
           {idea.user_persona}
         </span>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-zinc-600">
+          <span className="text-[10px] text-[#4A5670]">
             {timeAgo(idea.discovered_at)}
           </span>
           <a
             href={idea.source_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-zinc-600 hover:text-zinc-300 transition-colors"
+            className="text-[10px] text-[#8A9BB5] hover:text-white transition-colors"
           >
             source ↗
           </a>

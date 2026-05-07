@@ -3,43 +3,47 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════
-   Signal — Design System
-   Inspired by MemoryMerge's technical elegance
+   Signal — Design System v3.1
+   Navy-black palette. Teal-green accents.
+   Inspired by MemoryMerge.
    ═══════════════════════════════════════════ */
 
 :root {
-  --bg-base: #060606;
-  --bg-surface: #0d0d0d;
-  --bg-card: #111111;
-  --bg-card-hover: #161616;
-  --border-subtle: #1a1a1a;
-  --border-default: #222222;
-  --border-hover: #2e2e2e;
-  --text-primary: #f5f5f5;
-  --text-secondary: #a1a1a1;
-  --text-tertiary: #5c5c5c;
-  --accent-green: #22c55e;
-  --accent-amber: #f59e0b;
-  --accent-violet: #8b5cf6;
-  --accent-sky: #0ea5e9;
+  --bg-base: #0a0f1e;
+  --bg-surface: #0d1428;
+  --bg-card: #0d1428;
+  --bg-card-hover: #111a33;
+  --border-subtle: #1a2640;
+  --border-default: #1e2d4a;
+  --border-hover: #253556;
+  --text-primary: #ffffff;
+  --text-secondary: #8a9bb5;
+  --text-tertiary: #4a5670;
+  --accent-teal: #00d4aa;
+  --accent-teal-dim: rgba(0, 212, 170, 0.12);
+  --accent-blue: #1d6feb;
+  --accent-blue-dim: rgba(29, 111, 235, 0.08);
+  --accent-amber: #f5a623;
+  --accent-amber-dim: rgba(245, 166, 35, 0.12);
+  --accent-purple: #a855f7;
   --accent-rose: #f43f5e;
 }
 
 body {
   background: var(--bg-base);
   color: var(--text-primary);
-  font-family: "Inter", "Geist", system-ui, -apple-system, sans-serif;
+  font-family: "Inter", "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01", "ss03";
 }
 
 ::selection {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 212, 170, 0.2);
 }
 
 *:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.2);
+  outline: 2px solid rgba(0, 212, 170, 0.3);
   outline-offset: 2px;
   border-radius: 3px;
 }
@@ -47,7 +51,7 @@ body {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 2px; }
 
 /* Section labels */
 .overline {
