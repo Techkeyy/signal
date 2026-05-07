@@ -1,4 +1,4 @@
-/* Signal — minimal reset. All design is inline. */
+/* Signal — green / red / white theme. All design is inline. */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -9,9 +9,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-::selection { background: rgba(29, 111, 235, 0.2); }
+::selection { background: rgba(16, 185, 129, 0.2); }
 
-:focus-visible { outline: 2px solid rgba(29, 111, 235, 0.4); outline-offset: 2px; border-radius: 2px; }
+:focus-visible { outline: 2px solid rgba(16, 185, 129, 0.4); outline-offset: 2px; border-radius: 2px; }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }

@@ -5,23 +5,21 @@ import { StatsResponse, SignalIdea } from "@/lib/types";
 import { fetchIdeas, fetchStats, triggerRefresh } from "@/lib/api";
 
 /* ═══════════════════════════════════════════════════════
-   Signal — MemoryMerge verbatim clone
-   Every value extracted from live MemoryMerge DOM
+   Signal — green / red / white theme
    ═══════════════════════════════════════════════════════ */
 
 const S = {
   maxWidth: 1160,
   navH: 61,
-  // Colors (exact MemoryMerge)
   bg: "#0A0F1E",
   bgCard: "#0D1428",
   border: "#1E2D4A",
   text: "#FFFFFF",
   text2: "#8A9BB5",
-  accent: "#1D6FEB",
-  teal: "#00D4AA",
-  purple: "#A855F7",
-  // Font stacks
+  green: "#10B981",       // primary accent
+  green2: "#059669",      // darker green
+  red: "#EF4444",         // secondary accent
+  red2: "#DC2626",        // darker red
   font: `"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`,
   mono: `"SF Mono", "Fira Code", "JetBrains Mono", monospace`,
 } as const;
@@ -67,15 +65,14 @@ export default function Home() {
   const avgScore = stats?.avg_signal_score ?? 0;
   const subCount = 8;
 
-  // ── helpers ──
   const timeAgo = (d: string) => {
     try { const s = Math.floor((Date.now() - new Date(d).getTime()) / 1000); if (s < 60) return "just now"; const m = Math.floor(s / 60); if (m < 60) return `${m}m ago`; const h = Math.floor(m / 60); if (h < 24) return `${h}h ago`; return `${Math.floor(h / 24)}d ago`; } catch { return ""; }
   };
 
   type TierKey = "strong" | "medium" | "weak";
   const tierLabel: Record<TierKey, string> = { strong: "✓ strong", medium: "✓ medium", weak: "weak" };
-  const tierColor: Record<TierKey, string> = { strong: "#00D4AA", medium: "#F5A623", weak: "#8A9BB5" };
-  const scoreColor = (s: number) => s >= 50 ? "#00D4AA" : s >= 35 ? "#F5A623" : "#8A9BB5";
+  const tierColor: Record<TierKey, string> = { strong: S.green, medium: S.red, weak: S.text2 };
+  const scoreColor = (s: number) => s >= 50 ? S.green : s >= 35 ? S.red : S.text2;
 
   const TAB_CATEGORIES = ["All", "DeFi / Finance", "Cross-Chain / Interoperability", "Identity / Reputation", "DAO / Governance", "Wallet / UX", "MEV / Fairness", "Data / Storage", "Payments / Remittances"];
 
@@ -84,7 +81,7 @@ export default function Home() {
       {/* ═══════════ NAV ═══════════ */}
       <nav style={{ position: "sticky", top: 0, zIndex: 50, height: S.navH, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", background: "rgba(10,15,30,0.92)", backdropFilter: "blur(14px)", borderBottom: `1px solid ${S.border}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 22, height: 22, borderRadius: 6, background: S.teal, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: 22, height: 22, borderRadius: 6, background: S.green, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ color: S.bg, fontSize: 11, fontWeight: 800 }}>S</span>
           </div>
           <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: "-0.3px" }}>Signal</span>
@@ -100,8 +97,8 @@ export default function Home() {
       {/* ═══════════ HERO ═══════════ */}
       <section id="overview" style={{ maxWidth: S.maxWidth, margin: "0 auto", padding: "86px 24px 54px", textAlign: "center" }}>
         {/* Badge */}
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 20, background: `${S.accent}15`, border: `1px solid ${S.accent}30`, marginBottom: 26 }}>
-          <div style={{ width: 6, height: 6, borderRadius: "50%", background: S.teal }} />
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 20, background: `${S.green}15`, border: `1px solid ${S.green}30`, marginBottom: 26 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: S.green }} />
           <span style={{ fontSize: 12, color: S.text2 }}>Mined from r/ethereum, r/defi, r/web3 + 5 more</span>
         </div>
 
@@ -121,7 +118,7 @@ export default function Home() {
 
         {/* CTAs */}
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <button onClick={() => document.getElementById("explorer")?.scrollIntoView({ behavior: "smooth" })} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 8, padding: "12px 24px", borderRadius: 9, border: "none", background: S.accent, color: "white", fontSize: 14, fontWeight: 600 }}>
+          <button onClick={() => document.getElementById("explorer")?.scrollIntoView({ behavior: "smooth" })} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 8, padding: "12px 24px", borderRadius: 9, border: "none", background: S.green, color: "white", fontSize: 14, fontWeight: 600 }}>
             Browse Ideas
             <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
           </button>
@@ -137,11 +134,11 @@ export default function Home() {
             { label: "Subreddits", value: subCount, sub: "Web3 communities" },
             { label: "Ideas Found", value: total, sub: `${stats?.tiers?.strong ?? 0} strong signal`, mono: true },
             { label: "Avg Score", value: avgScore, sub: "out of 100", accent: true },
-            { label: "Categories", value: catCount, sub: "problem domains", purple: true },
+            { label: "Categories", value: catCount, sub: "problem domains", red: true },
           ].map((m, i) => (
             <div key={i} style={{ background: S.bgCard, border: `1px solid ${S.border}`, borderRadius: 12, padding: "18px 20px", textAlign: "left" }}>
               <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: S.text2 }}>{m.label}</div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: m.accent ? "#F5A623" : m.purple ? S.purple : S.text, marginTop: 6, letterSpacing: "-0.3px", fontFamily: m.mono ? S.mono : S.font }}>{m.value}</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: m.accent ? S.green : m.red ? S.red : S.text, marginTop: 6, letterSpacing: "-0.3px", fontFamily: m.mono ? S.mono : S.font }}>{m.value}</div>
               <div style={{ fontSize: 11, color: S.text2, marginTop: 2 }}>{m.sub}</div>
             </div>
           ))}
@@ -152,12 +149,12 @@ export default function Home() {
       <section style={{ maxWidth: S.maxWidth, margin: "0 auto", padding: "0 24px 24px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 8, height: 8, borderRadius: 999, background: S.teal }} />
+            <div style={{ width: 8, height: 8, borderRadius: 999, background: S.green }} />
             <span style={{ fontSize: 12, color: S.text2 }}>Preview state · refreshed {secondsAgo}s ago</span>
           </div>
           <div style={{ display: "flex", gap: 10 }}>
             <button onClick={handleRefresh} disabled={refreshing} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 6, padding: "8px 12px", borderRadius: 8, border: `1px solid ${S.border}`, background: "transparent", color: S.text2, opacity: refreshing ? 0.5 : 1 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: refreshing ? S.teal : S.text2 }} />
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: refreshing ? S.green : S.text2 }} />
               {refreshing ? "Refreshing..." : "Refresh"}
             </button>
           </div>
@@ -178,10 +175,10 @@ export default function Home() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
             {[
-              { icon: "🔍", iconBg: `${S.accent}15`, iconColor: S.accent, title: "Reddit Scraping", body: "Hits Reddit's open JSON API across 8 subreddits — r/ethereum, r/ethdev, r/defi, r/web3, r/solana, r/CryptoCurrency. No API key, no rate limits, just real talk." },
-              { icon: "⚡", iconBg: `${S.purple}15`, iconColor: S.purple, title: "Frustration Detection", body: "Three-tier pattern matching scans for explicit calls-to-build, complaint language, and hidden frustration. Noise filters kill testnet begging, career posts, and memes." },
-              { icon: "🌍", iconBg: `#F5A62315`, iconColor: "#F5A623", title: "Global Scale Filter", body: "Every signal is checked: Does this affect users in Argentina, Nigeria, Vietnam, and Germany equally? Is it chain-agnostic? Can it work without geo-gated KYC?" },
-              { icon: "💡", iconBg: `#00D4AA15`, iconColor: S.teal, title: "Idea Generation", body: "Each surviving signal becomes a complete project card: problem statement, source quote, user persona, why-Web3 reasoning, tech stack suggestion, and a tight pitch." },
+              { icon: "🔍", iconBg: `${S.green}15`, iconColor: S.green, title: "Reddit Scraping", body: "Hits Reddit's open JSON API across 8 subreddits — r/ethereum, r/ethdev, r/defi, r/web3, r/solana, r/CryptoCurrency. No API key, no rate limits, just real talk." },
+              { icon: "⚡", iconBg: `${S.red}15`, iconColor: S.red, title: "Frustration Detection", body: "Three-tier pattern matching scans for explicit calls-to-build, complaint language, and hidden frustration. Noise filters kill testnet begging, career posts, and memes." },
+              { icon: "🌍", iconBg: `${S.green}15`, iconColor: S.green, title: "Global Scale Filter", body: "Every signal is checked: Does this affect users in Argentina, Nigeria, Vietnam, and Germany equally? Is it chain-agnostic? Can it work without geo-gated KYC?" },
+              { icon: "💡", iconBg: `${S.red}15`, iconColor: S.red, title: "Idea Generation", body: "Each surviving signal becomes a complete project card: problem statement, source quote, user persona, why-Web3 reasoning, tech stack suggestion, and a tight pitch." },
             ].map((f, i) => (
               <div key={i} style={{ background: S.bgCard, border: `1px solid ${S.border}`, borderRadius: 12, padding: 24 }}>
                 <div style={{ width: 42, height: 42, borderRadius: 10, background: f.iconBg, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16, fontSize: 22 }}>{f.icon}</div>
@@ -205,15 +202,15 @@ export default function Home() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
           {[
-            { num: "01", agent: "Scraper", title: "Pull real conversations from Web3 communities", desc: "Signal hits Reddit JSON endpoints across 8 subreddits. Posts are fetched, deduplicated, and passed to the detection layer." },
-            { num: "02", agent: "Detector", title: "Find people saying 'why can't I...' and 'someone should build...'", desc: "Three-tier pattern matching scans for explicit calls-to-build, complaint language, and hidden frustration signals." },
-            { num: "03", agent: "Filter", title: "Kill ideas that only work in one country or for one person", desc: "Every signal is checked against global-scale criteria. Local problems and individual support requests are filtered out." },
-            { num: "04", agent: "Generator", title: "Turn complaints into structured hackathon cards", desc: "Each surviving signal becomes a complete project card with problem statement, source quote, persona, pitch, and tech stack." },
+            { num: "01", agent: "Scraper", agentBg: `${S.green}15`, agentColor: S.green, title: "Pull real conversations from Web3 communities", desc: "Signal hits Reddit JSON endpoints across 8 subreddits. Posts are fetched, deduplicated, and passed to the detection layer." },
+            { num: "02", agent: "Detector", agentBg: `${S.red}15`, agentColor: S.red, title: "Find people saying 'why can't I...' and 'someone should build...'", desc: "Three-tier pattern matching scans for explicit calls-to-build, complaint language, and hidden frustration signals." },
+            { num: "03", agent: "Filter", agentBg: `${S.green}15`, agentColor: S.green, title: "Kill ideas that only work in one country or for one person", desc: "Every signal is checked against global-scale criteria. Local problems and individual support requests are filtered out." },
+            { num: "04", agent: "Generator", agentBg: `${S.red}15`, agentColor: S.red, title: "Turn complaints into structured hackathon cards", desc: "Each surviving signal becomes a complete project card with problem statement, source quote, persona, pitch, and tech stack." },
           ].map((s, i) => (
             <div key={i} style={{ background: S.bgCard, border: `1px solid ${S.border}`, borderRadius: 12, padding: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
                 <span style={{ fontSize: 36, fontWeight: 800, color: S.border, letterSpacing: "-1px", lineHeight: 1 }}>{s.num}</span>
-                <span style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: S.text2, background: `${S.accent}10`, padding: "4px 10px", borderRadius: 6 }}>{s.agent}</span>
+                <span style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: s.agentColor, background: s.agentBg, padding: "4px 10px", borderRadius: 6 }}>{s.agent}</span>
               </div>
               <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 8, color: S.text }}>{s.title}</div>
               <div style={{ fontSize: 13, color: S.text2, lineHeight: 1.65 }}>{s.desc}</div>
@@ -235,7 +232,7 @@ export default function Home() {
 
           {/* Explorer status */}
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
-            <div style={{ width: 8, height: 8, borderRadius: 999, background: S.teal }} />
+            <div style={{ width: 8, height: 8, borderRadius: 999, background: S.green }} />
             <span style={{ fontSize: 12, color: S.text2 }}>Last synced {secondsAgo}s ago</span>
           </div>
 
@@ -243,13 +240,13 @@ export default function Home() {
           <div style={{ display: "flex", gap: 12, marginBottom: 32, flexWrap: "wrap" }}>
             {[
               { label: "Ideas", value: total, sub: `${stats?.tiers?.strong ?? 0} strong · ${stats?.tiers?.medium ?? 0} medium` },
-              { label: "Avg Score", value: avgScore, sub: "across all ideas", accent: true },
+              { label: "Avg Score", value: avgScore, sub: "across all ideas", green: true },
               { label: "Subreddits", value: subCount, sub: "scanned every 6h" },
-              { label: "Refresh", value: "6h", sub: "interval", teal: true },
+              { label: "Refresh", value: "6h", sub: "interval", green: true },
             ].map((s, i) => (
               <div key={i} style={{ flex: "1 1 0", minWidth: 120, background: S.bgCard, border: `1px solid ${S.border}`, borderRadius: 12, padding: "18px 20px" }}>
                 <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: S.text2 }}>{s.label}</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: s.accent ? "#F5A623" : s.teal ? S.teal : S.text, marginTop: 6, letterSpacing: "-0.3px" }}>{s.value}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: s.green ? S.green : S.text, marginTop: 6, letterSpacing: "-0.3px" }}>{s.value}</div>
                 <div style={{ fontSize: 11, color: S.text2, marginTop: 2 }}>{s.sub}</div>
               </div>
             ))}
@@ -258,7 +255,7 @@ export default function Home() {
           {/* Tab switcher */}
           <div style={{ display: "flex", gap: 6, marginBottom: 24, overflowX: "auto", paddingBottom: 4 }}>
             {TAB_CATEGORIES.map((tab) => (
-              <button key={tab} onClick={() => setActiveTab(tab)} style={{ cursor: "pointer", flexShrink: 0, padding: "6px 14px", borderRadius: 8, border: `1px solid ${activeTab === tab ? S.accent : S.border}`, background: activeTab === tab ? `${S.accent}15` : "transparent", color: activeTab === tab ? S.accent : S.text2, fontSize: 12, fontWeight: activeTab === tab ? 600 : 400 }}>
+              <button key={tab} onClick={() => setActiveTab(tab)} style={{ cursor: "pointer", flexShrink: 0, padding: "6px 14px", borderRadius: 8, border: `1px solid ${activeTab === tab ? S.green : S.border}`, background: activeTab === tab ? `${S.green}15` : "transparent", color: activeTab === tab ? S.green : S.text2, fontSize: 12, fontWeight: activeTab === tab ? 600 : 400 }}>
                 {tab}{tab === "All" && total > 0 ? ` ${total}` : ""}
               </button>
             ))}
@@ -276,7 +273,16 @@ export default function Home() {
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {ideas.map((idea) => {
                 const tier = (idea.signal_tier || "weak") as TierKey;
-                const catColorMap: Record<string, string> = { "DeFi / Finance": S.teal, "Cross-Chain / Interoperability": S.purple, "Identity / Reputation": S.accent, "DAO / Governance": "#F5A623", "Wallet / UX": "#F43F5E", "MEV / Fairness": "#EF4444", "Data / Storage": "#06B6D4", "Payments / Remittances": "#22C55E" };
+                const catColorMap: Record<string, string> = {
+                  "DeFi / Finance": S.green,
+                  "Cross-Chain / Interoperability": S.red,
+                  "Identity / Reputation": S.green2,
+                  "DAO / Governance": S.red2,
+                  "Wallet / UX": S.green,
+                  "MEV / Fairness": S.red,
+                  "Data / Storage": S.green2,
+                  "Payments / Remittances": S.red2,
+                };
                 const catColor = catColorMap[idea.primary_category] || "#4A5670";
                 return (
                   <div key={idea.id} style={{ background: S.bgCard, border: `1px solid ${S.border}`, borderLeft: `3px solid ${catColor}`, borderRadius: 12, padding: 20 }}>
@@ -290,7 +296,7 @@ export default function Home() {
                     </div>
                     <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 6, color: S.text, lineHeight: 1.4 }}>{idea.problem_title}</div>
                     <div style={{ fontSize: 13, color: S.text2, lineHeight: 1.6, marginBottom: 12, fontStyle: "italic" }}>{idea.source_quote}</div>
-                    <div style={{ background: `${S.accent}08`, border: `1px solid ${S.border}`, borderRadius: 8, padding: "12px 14px", marginBottom: 10 }}>
+                    <div style={{ background: `${S.green}08`, border: `1px solid ${S.border}`, borderRadius: 8, padding: "12px 14px", marginBottom: 10 }}>
                       <div style={{ fontSize: 13, color: S.text2, lineHeight: 1.55 }}>{idea.pitch}</div>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
