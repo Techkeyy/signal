@@ -2,16 +2,20 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Signal — Web3 Hackathon Ideas",
   description:
-    "Mine real complaints from Reddit to find your next Web3 hackathon project idea. Data-driven, global-scale problem discovery.",
+    "Mine real Reddit complaints to find Web3 hackathon project ideas. Every card backed by a real person's frustration.",
   openGraph: {
     title: "Signal — Web3 Hackathon Ideas",
     description:
-      "Mine real complaints from Reddit to find your next Web3 hackathon project idea.",
+      "Web3 hackathon ideas from real complaints on Reddit. Global-scale problem discovery.",
     type: "website",
   },
 };
@@ -23,9 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body
-        className={`${inter.variable} font-sans antialiased bg-[#0A0A0A]`}
-      >
+      <body className={`${inter.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>
