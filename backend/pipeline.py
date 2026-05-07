@@ -64,8 +64,33 @@ FRUSTRATION_HIDDEN = [
     r"(?i)back to (square one|the drawing board)",
 ]
 
+# --- Negative filters: posts that look like frustration but aren't ---
+# These are common false positives in Web3 subreddits
+NOISE_PATTERNS = [
+    r"(?i)(loan|send|lend) me .*(eth|sol|matic|token|testnet|sepolia|goerli)",
+    r"(?i)(faucet|testnet.*token|need.*test.*eth)",
+    r"(?i)(how|where) (to|can I) (get|find|start|learn|begin)",
+    r"(?i)(job|career|salary|hire|interview|resume|cv)",
+    r"(?i)(posting on|linkedin|twitter.*follow)",
+    r"(?i)(price|chart|pump|dump|moon|wen|ngmi|wagmi)",
+    r"(?i)(airdrop|giveaway|free.*token|claim.*now)",
+    r"(?i)(just bought|just sold|bought the dip|sold the top)",
+    r"(?i)^(help|please help|can anyone|can someone|does anyone know)",
+    r"(?i)(scam|hack|phish|drain).*(my|me)",
+    r"(?i)(tutorial|course|bootcamp|certification)",
+    r"(?i)(project ideas|what should I build|looking for ideas)",
+]
+
 # Combined
 ALL_FRUSTRATION = FRUSTRATION_EXPLICIT + FRUSTRATION_COMPLAINT + FRUSTRATION_HIDDEN
+
+
+def is_noise(text: str) -> bool:
+    """Check if a post is a known false positive pattern."""
+    for pattern in NOISE_PATTERNS:
+        if re.search(pattern, text):
+            return True
+    return False
 
 
 def fetch_subreddit(subreddit: str, sort: str = "hot") -> list[dict]:
@@ -134,6 +159,11 @@ def score_post(post: dict) -> Optional[dict]:
     Otherwise return None.
     """
     text = f"{post['title']} {post['selftext']}"
+
+    # Skip known noise patterns immediately
+    if is_noise(text):
+        return None
+
     is_frustrated, frust_score, patterns = detect_frustration(text)
 
     if not is_frustrated:

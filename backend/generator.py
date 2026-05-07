@@ -249,10 +249,45 @@ def _generate_why_web3(post: dict, category: str) -> str:
 
 
 def _generate_pitch(post: dict, category: str, seed: str) -> str:
-    """Write a tight 15-second pitch."""
-    title = post["title"].lower().rstrip(".")
-    # Make it snappy
-    return f"{seed} solving: {title}."
+    """
+    Write a natural, elegant one-line pitch.
+    Avoids mechanical 'solving:' prefixes. Reads like a human wrote it.
+    """
+    title = post["title"]
+
+    # Strip common Reddit prefixes for cleaner phrasing
+    prefixes_to_strip = [
+        "how do you", "how to", "how can i", "how can we",
+        "why is", "why are", "why do", "does anyone",
+        "is there a", "is there any", "has anyone",
+        "can someone", "can anybody",
+    ]
+    clean = title
+    for pfx in prefixes_to_strip:
+        if clean.lower().startswith(pfx):
+            clean = clean[len(pfx):].strip()
+            break
+
+    # Remove trailing punctuation
+    clean = clean.rstrip("?.!")
+    # Capitalize
+    clean = clean[0].upper() + clean[1:] if clean else clean
+
+    # Build natural pitch based on category
+    pitches = {
+        "Cross-Chain / Interoperability": f"{clean} — a unified layer for the multichain world.",
+        "DeFi / Finance": f"{clean} — open financial infrastructure for everyone.",
+        "Identity / Reputation": f"{clean} — self-sovereign identity that actually works.",
+        "DAO / Governance": f"{clean} — governance that scales beyond the whales.",
+        "Wallet / UX": f"{clean} — onboarding the next billion, friction-free.",
+        "MEV / Fairness": f"{clean} — protecting users from invisible exploitation.",
+        "Data / Storage": f"{clean} — permanent, censorship-resistant data.",
+        "Payments / Remittances": f"{clean} — money that moves at internet speed.",
+    }
+
+    default = f"{clean} — a Web3 primitive that fills a real gap."
+
+    return pitches.get(category, default)
 
 
 # ─── Pipeline Runner ───────────────────────────────────────────
