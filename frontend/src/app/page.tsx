@@ -30,12 +30,9 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("All");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [cached, setCached] = useState(false);
   const [secondsAgo, setSecondsAgo] = useState(0);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
-
-  const loadStats = useCallback(async () => {
-    try { setStats(await fetchStats()); } catch {}
-  }, []);
 
   const loadIdeas = useCallback(async () => {
     setLoading(true);
@@ -43,9 +40,18 @@ export default function Home() {
       const cat = activeTab === "All" ? "" : activeTab;
       const data = await fetchIdeas({ category: cat, limit: 30 });
       setIdeas(data.ideas);
+      if ((data as any).cached) setCached(true);
     } catch {}
     setLoading(false);
   }, [activeTab]);
+
+  const loadStats = useCallback(async () => {
+    try {
+      const s = await fetchStats();
+      setStats(s);
+      if ((s as any).cached) setCached(true);
+    } catch {}
+  }, []);
 
   useEffect(() => { loadStats(); loadIdeas(); }, [loadStats, loadIdeas]);
 
@@ -150,7 +156,7 @@ export default function Home() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 8, height: 8, borderRadius: 999, background: S.green }} />
-            <span style={{ fontSize: 12, color: S.text2 }}>Preview state · refreshed {secondsAgo}s ago</span>
+            <span style={{ fontSize: 12, color: S.text2 }}>{cached ? "📦 Cached data" : `Preview state · refreshed ${secondsAgo}s ago`}</span>
           </div>
           <div style={{ display: "flex", gap: 10 }}>
             <button onClick={handleRefresh} disabled={refreshing} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 6, padding: "8px 12px", borderRadius: 8, border: `1px solid ${S.border}`, background: "transparent", color: S.text2, opacity: refreshing ? 0.5 : 1 }}>
